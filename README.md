@@ -58,20 +58,63 @@ python3 --version
 which python3
 which pip3
 
-# 환경 변수 설정 
-echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.zshrc
+# 환경 변수 설정 (Apple Silicon Mac용)
+echo 'export PATH="/opt/homebrew/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
 
-### 4-3. Flask 패키지 설치
+### 4-3. Python 3.13의 새로운 정책과 가상 환경
+
+#### 4-3-1. externally-managed-environment 정책
+
+Python 3.13부터 **PEP 668** 정책이 도입되어, 시스템 Python 환경 보호를 위해 직접적인 pip 설치가 제한됩니다:
 
 ```bash
-# pip3를 이용해 Flask 설치
-pip3 install flask
+# 이런 명령어들이 오류 발생
+pip3 install flask              # ❌ 오류
+pip3 install --user flask       # ❌ 오류
+```
 
-# Flask 설치 확인
-pip3 show flask
+**오류 메시지:**
+
+```
+error: externally-managed-environment
+```
+
+
+#### 4-3-2. 가상 환경이란?
+
+**가상 환경(Virtual Environment)**은 파이썬 프로젝트별로 독립적인 패키지 환경을 만드는 기능입니다.
+
+**비유로 설명:**
+
+- **시스템 전체**: 공용 작업실 (모든 사람이 사용)
+- **가상 환경**: 내 전용 작업실 (나만 사용하는 독립 공간)
+
+**장점:**
+
+- **안전성**: 시스템 Python 환경 보호
+- **격리**: 프로젝트별 패키지 관리
+- **호환성**: Python 3.13 정책 준수
+
+
+#### 4-3-3. 가상 환경을 이용한 Flask 설치
+
+```bash
+# 1. 가상 환경 생성
+python3 -m venv flask_project
+
+# 2. 가상 환경 활성화
+source flask_project/bin/activate
+
+# 3. 가상 환경 활성화 확인 (터미널 프롬프트 앞에 (flask_project) 표시됨)
+
+# 4. Flask 설치
+pip install flask
+
+# 5. 설치 확인
+python -c "import flask; print('Flask 설치 성공!')"
 ```
 
 
@@ -106,9 +149,15 @@ cat my_solution.py
 # 파일 직접 실행 (Hello 출력됨)
 python3 my_solution.py
 
-# 함수 단독 테스트
+# 함수 단독 테스트 (import 테스트)
 python3 -c "from my_solution import hello; print(hello())"
 ```
+
+**import 테스트 설명:**
+
+- `from my_solution import hello`: my_solution.py 파일에서 hello 함수를 가져오기
+- 함수가 다른 곳에서 정상적으로 사용될 수 있는지 확인하는 과정
+- 코드의 재사용성과 모듈화 검증
 
 
 ## 5. Visual Studio Code 설치 및 설정
@@ -119,17 +168,10 @@ python3 -c "from my_solution import hello; print(hello())"
 # Visual Studio Code 설치
 brew install --cask visual-studio-code
 
-# 설치 확인
-code --version
 ```
 
 
 ## 5-2. Material Icon Theme 확장 설치
-
-```bash
-# VS Code 실행
-code
-```
 
 VS Code가 실행되면:
 
